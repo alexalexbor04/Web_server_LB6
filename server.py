@@ -1,18 +1,67 @@
 import socket
 import threading
+from os.path import join, isfile
+from datetime import datetime
 
-def handle_client(client_socket):
+from server_config import *
+
+def add_log(date, addr, path):
+    with open('log.txt', 'a') as logs:
+        logs.write(f'<{date}> {addr}: {path}\n')
+
+def get_date():
+    return datetime.now().strftime('%a, %d %b %Y %H:%M:%S GTM')
+
+def get_code(path, extension):
+    if not isfile(path):
+        return 404
+    elif extension not in ALLOWED_TYPES:
+        return 403
+    else:
+        return 200
+
+def generate_path(request):
+    path = request.split('\n')[0].split(' ')[1][1:]
+    if not path:
+        path = DEF
+    return join(DIR, path)
+
+def get_extension(path):
+    return path.split('.')[-1]
+
+def process(request, addr):
+    path = generate_path(request)
+    extension = get_extension(path)
+    code = get_code(path, extension)
+    date = get_date()
+    body = b''
+    if code == 200:
+        body = read_file(path)  
+    else:
+        extension = 'html'
+    response = PAT.format(code, CODES[code], date, TYPES[extension], len(body)).encode() + body
+    add_log(date, addr, path)
+    return response
+
+def read_file(path):
+    try:
+        if isfile(path):
+            with open(path, 'rb') as f:
+                return f.read()
+        else:
+            print(f"File not found: {path}")
+            return None
+    except Exception as e:
+        print(f"Error reading file {path}: {e}")
+        return None
+
+def handle_client(client_socket, addr):
     with client_socket:
         request = client_socket.recv(1024).decode('utf-8')
         print(f"\nReceived request:\n{request}")
-
-        http_response = """\
-HTTP/1.1 200 OK
-
-Hello, World!
-"""
-        client_socket.sendall(http_response.encode('utf-8'))
-
+        if request:
+            http_response = process(request, addr)
+            client_socket.sendall(http_response)
 
 def start_server(host, port):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,7 +74,7 @@ def start_server(host, port):
         client_socket, addr = server.accept()
         print(f"Разрешено подключение от {addr}")
 
-        client_handler = threading.Thread(target=handle_client, args=(client_socket,))
+        client_handler = threading.Thread(target=handle_client, args=(client_socket, addr))
         client_handler.start()
 
 if __name__ == "__main__":
@@ -40,3 +89,4 @@ if __name__ == "__main__":
         PORT = int(PORT)
 
     start_server(IP, PORT)
+
