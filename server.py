@@ -1,31 +1,44 @@
 import socket
+import threading
 
-sock = socket.socket()
+# Обработчик клиентских запросов
+def handle_client(client_socket):
+    with client_socket:
+        request = client_socket.recv(1024).decode('utf-8')
+        print(f"Received request:\n{request}")
 
-try:
-    sock.bind(('', 80))
-    print("Using port 80")
-except OSError:
-    sock.bind(('', 8080))
-    print("Using port 8080")
+        # Формируем простой HTTP-ответ
+        http_response = """
+        HTTP/1.1 200 OK
 
-sock.listen(5)
+        Hello, World!
+        """
+        client_socket.sendall(http_response.encode('utf-8'))
 
-conn, addr = sock.accept()
-print("Connected", addr)
 
-data = conn.recv(8192)
-msg = data.decode()
+def start_server(host, port):
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind((host, port))
+    server.listen(5)
+    print(f"Сервер запущен на {host}:{port}")
 
-print(msg)
+    while True:
+        client_socket, addr = server.accept()
+        print(f"Разрешено подключение от {addr}")
 
-resp = """HTTP/1.1 200 OK
-Server: SelfMadeServer v0.0.1
-Content-type: text/html
-Connection: close
+        client_handler = threading.Thread(target=handle_client, args=(client_socket,))
+        client_handler.start()
 
-Hello, webworld!"""
+if __name__ == "__main__":
+    IP = input("Введите IP-адрес сервера (по умолчанию 127.0.0.1): ")
+    if IP == '':
+        IP = "127.0.0.1"
 
-conn.send(resp.encode())
+    PORT = input('Введите порт для внешнего подключения (по умолчанию 80): ')
+    if PORT == '':
+        PORT = 80
+    else:
+        PORT = int(PORT)
 
-conn.close()
+    start_server(IP, PORT)
