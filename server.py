@@ -1,13 +1,11 @@
 import socket
 import threading
 
-# Обработчик клиентских запросов
 def handle_client(client_socket):
     with client_socket:
         request = client_socket.recv(1024).decode('utf-8')
         print(f"Received request:\n{request}")
 
-        # Формируем простой HTTP-ответ
         http_response = """
         HTTP/1.1 200 OK
 
