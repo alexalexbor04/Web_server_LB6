@@ -35,14 +35,14 @@ def http_processing(request, addr):
     date = add_date()
     body = b''
     if code == 200:
-        body = read_file(path)  
+        body = file_reader(path)  
     else:
         extension = 'html'
     response = PAT.format(code, CODES[code], date, TYPES[extension], len(body)).encode() + body
     logging(date, addr, path)
     return response
 
-def read_file(path):
+def file_reader(path):
     try:
         if isfile(path):
             with open(path, 'rb') as f:
