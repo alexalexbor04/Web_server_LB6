@@ -11,7 +11,7 @@ def logging(date, addr, path):
 def add_date():
     return datetime.now().strftime('%a, %d %b %Y %H:%M:%S GTM')
 
-def get_code(path, extension):
+def add_code(path, extension):
     if not isfile(path):
         return 404
     elif extension not in ALLOWED_TYPES:
@@ -31,7 +31,7 @@ def get_extension(path):
 def process(request, addr):
     path = generate_path(request)
     extension = get_extension(path)
-    code = get_code(path, extension)
+    code = add_code(path, extension)
     date = add_date()
     body = b''
     if code == 200:
