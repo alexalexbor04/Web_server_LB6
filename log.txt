@@ -7,3 +7,8 @@
 <Mon, 27 May 2024 01:25:55 GTM> ('127.0.0.1', 65252): in_html\putin.mp4
 <Mon, 27 May 2024 01:31:41 GTM> ('127.0.0.1', 65375): in_html\way
 <Mon, 27 May 2024 01:31:50 GTM> ('127.0.0.1', 65394): in_html\way.html
+<Mon, 27 May 2024 23:10:38 GTM> ('127.0.0.1', 53718): in_html\favicon.ico
+<Mon, 27 May 2024 23:10:39 GTM> ('127.0.0.1', 53719): in_html\index.html
+<Mon, 27 May 2024 23:10:40 GTM> ('127.0.0.1', 53720): in_html\image.jpg
+<Mon, 27 May 2024 23:10:40 GTM> ('127.0.0.1', 53722): in_html\favicon.ico
+<Mon, 27 May 2024 23:10:50 GTM> ('127.0.0.1', 53726): in_html\way.html
