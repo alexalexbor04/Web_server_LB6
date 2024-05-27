@@ -2,7 +2,6 @@ import socket
 import threading
 from os.path import join, isfile
 from datetime import datetime
-
 from server_config import *
 
 def add_log(date, addr, path):
@@ -76,6 +75,7 @@ def start_server(host, port):
 
         client_handler = threading.Thread(target=handle_client, args=(client_socket, addr))
         client_handler.start()
+
 
 if __name__ == "__main__":
     IP = input("Введите IP-адрес сервера (по умолчанию 127.0.0.1): ")
