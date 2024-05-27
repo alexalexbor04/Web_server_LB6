@@ -8,7 +8,7 @@ def logging(date, addr, path):
     with open('log.txt', 'a') as logs:
         logs.write(f'<{date}> {addr}: {path}\n')
 
-def get_date():
+def add_date():
     return datetime.now().strftime('%a, %d %b %Y %H:%M:%S GTM')
 
 def get_code(path, extension):
@@ -32,7 +32,7 @@ def process(request, addr):
     path = generate_path(request)
     extension = get_extension(path)
     code = get_code(path, extension)
-    date = get_date()
+    date = add_date()
     body = b''
     if code == 200:
         body = read_file(path)  
