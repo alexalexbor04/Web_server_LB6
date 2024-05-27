@@ -4,7 +4,7 @@ from os.path import join, isfile
 from datetime import datetime
 from server_config import *
 
-def add_log(date, addr, path):
+def logging(date, addr, path):
     with open('log.txt', 'a') as logs:
         logs.write(f'<{date}> {addr}: {path}\n')
 
@@ -39,7 +39,7 @@ def process(request, addr):
     else:
         extension = 'html'
     response = PAT.format(code, CODES[code], date, TYPES[extension], len(body)).encode() + body
-    add_log(date, addr, path)
+    logging(date, addr, path)
     return response
 
 def read_file(path):
