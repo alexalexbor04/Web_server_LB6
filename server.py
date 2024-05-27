@@ -28,7 +28,7 @@ def generate_path(request):
 def get_extension(path):
     return path.split('.')[-1]
 
-def process(request, addr):
+def http_processing(request, addr):
     path = generate_path(request)
     extension = get_extension(path)
     code = add_code(path, extension)
@@ -59,7 +59,7 @@ def handle_client(client_socket, addr):
         request = client_socket.recv(1024).decode('utf-8')
         print(f"\nReceived request:\n{request}")
         if request:
-            http_response = process(request, addr)
+            http_response = http_processing(request, addr)
             client_socket.sendall(http_response)
 
 def start_server(host, port):
