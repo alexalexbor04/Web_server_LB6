@@ -4,6 +4,7 @@ from os.path import join, isfile
 from datetime import datetime
 from server_config import *
 
+
 def logging(date, addr, path):
     with open('log.txt', 'a') as logs:
         logs.write(f'<{date}> {addr}: {path}\n')
@@ -48,16 +49,16 @@ def file_reader(path):
             with open(path, 'rb') as f:
                 return f.read()
         else:
-            print(f"File not found: {path}")
+            print(f"Нет такого файла: {path}")
             return None
     except Exception as e:
-        print(f"Error reading file {path}: {e}")
+        print(f"Ошибка чтения файла {path}: {e}")
         return None
 
 def handle_client(client_socket, addr):
     with client_socket:
         request = client_socket.recv(1024).decode('utf-8')
-        print(f"\nReceived request:\n{request}")
+        print(f"\nПолученный запрос:\n{request}")
         if request:
             http_response = http_processing(request, addr)
             client_socket.sendall(http_response)
@@ -82,11 +83,10 @@ if __name__ == "__main__":
     if IP == '':
         IP = "127.0.0.1"
 
-    PORT = input('Введите порт для внешнего подключения (по умолчанию 80): ')
+    PORT = input('Введите порт (по умолчанию 80): ')
     if PORT == '':
         PORT = 80
     else:
         PORT = int(PORT)
 
     start_server(IP, PORT)
-
